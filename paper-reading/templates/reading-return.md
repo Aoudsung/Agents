@@ -1,6 +1,6 @@
 # 精读返回：<论文标题>
 
-> 论文记录：research-record.md | 来源交接单：<reading-brief-path 或 无> | brief_id：<ID> | source_record_revision：<revision>
+> 论文记录：research-record.md | paper card：paper-card.json | 来源交接单：<path 或 无> | brief_id：<ID> | source_record_revision：<revision>
 
 ## 1. 身份与类型纠正
 
@@ -21,8 +21,6 @@
 
 ## 2. 对交接问题的逐项回答
 
-复制所有 Q#；题目必须与 brief 完全一致。
-
 ### Q1｜<问题原文>
 
 - status：answered / partial / undetermined / not-applicable
@@ -32,7 +30,7 @@
 - remaining_uncertainty：
 - judgment_change：
 - reading_value_change：
-- domain_relation_change：
+- relation_hint_change：
 - next_search_action：
 
 ## 3. 检索判断变更
@@ -51,15 +49,17 @@
 - do_not_use_for：
 - priority_change：
 
-## 5. 领域关系变更
+## 5. Relation hint 变更
 
-- domain_relation_before：
-- domain_relation_after：
-- relation_kind：
-- related_papers：
+- relation_hint_before：
+- relation_hint_after：
+- proposed_relation_type：
+- related_papers_or_units：
 - relation_basis：
-- transfer_conditions：
-- incompatible_conditions：
+- comparability_risks：
+- relation_status：proposed
+
+> 本节不构成 canonical relation。Map Agent 读取 paper-card 后执行可比性门和最终裁定。
 
 ## 6. 可回用于检索的新信息
 
@@ -67,7 +67,7 @@
 - 关键前驱、后续、竞争工作或反证：<附 DOI/arXiv/OpenAlex>
 - 值得扩展的引用关系：
 - 建议新增或改写的查询：
-- 需要 Search 定向核查的 Claim、领域关系或研究机会：
+- 需要 Search 定向核查的 Claim、relation hint 或研究机会：
 - invalidated_routes_or_tasks：
 
 ## 7. 论文真正建立了什么
@@ -76,7 +76,8 @@
 - 最强证据：
 - 最重要的零结果、反例或边界：
 - 未建立的内容：
+- paper-card knowledge units：
 
 ## 8. 建议 Search 更新
 
-<明确指出 Search research-record 中要修改的身份、类型、阅读作用、路线、关系、证据层级、未决问题或查询；没有变化时说明原因。>
+<明确指出 Search research-record 中要修改的身份、类型、阅读作用、relation hint、证据层级、未决问题或查询；没有变化时说明原因。>

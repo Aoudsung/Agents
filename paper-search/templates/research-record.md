@@ -1,4 +1,4 @@
-# 共享研究记录：<研究问题>
+# 检索前沿记录：<研究问题>
 
 > revision：<修订号> | 建立时间：<日期> | 最近更新：<日期>
 
@@ -6,12 +6,12 @@
 
 - 用户问题：
 - 检索用途：
-- 领域边界：
-- 范围与滚动时间窗口：
-- 已知约束：
-- 核心知识问题：
-- 可能涉及的分析单位：
-- 可接受的证据类型：
+- 覆盖范围：
+- 排除范围：
+- 时间窗口：
+- 核心未知量：
+- 分析单位：
+- 可接受证据类型：
 - 关键不可比性风险：
 
 ## 2. 当前未决问题与下一动作
@@ -21,14 +21,14 @@
 - 当前判断：
 - 什么证据会改变它：
 - 下一最小动作：
-- 动作状态：pending / active / answered / partial / undetermined
-- 受影响路线或论文：
+- 状态：pending / active / answered / partial / undetermined
+- 受影响候选、路线或 relation hint：
 
 ## 3. 查询地图
 
 ### 有效术语
 
-| 表述 | 社区/来源 | 覆盖的知识问题 | 来自精读反馈 |
+| 表述 | 社区/来源 | 覆盖的未知量 | 来自精读或 Mapper 反馈 |
 |---|---|---|---|
 
 ### A/B/C/D 计划
@@ -40,69 +40,61 @@
 
 ## 4. 论文登记与阅读导航
 
-| paper_key | 标题 | 身份 | paper type 假设/确认 | evidence mode | analysis unit | reading role | why read | relation kind | 当前领域作用 | 证据层级 | 本地状态 |
-|---|---|---|---|---|---|---|---|---|---|---|---|
+| paper_key | 标题 | 身份 | type/evidence/analysis-unit 假设 | reading role | why read | relation hint | hint status | 证据层级 | 本地状态 |
+|---|---|---|---|---|---|---|---|---|---|
 
-> 路径键、work_id、version_id 和公开标识分开保存。检索级类型与关系是假设，全文返回后允许纠正。
+> hint status 固定为 provisional，除非明确引用 Mapper 的 accepted relation ID。
 
-## 5. 领域问题树与研究路线
+## 5. 候选知识问题与路线
 
-### <核心问题或路线>
+### <知识问题或候选路线>
 
 - 问题定义：
 - 成功标准：
-- 主要研究传统和证据类型：
-- 代表论文及其独有贡献：
-- 支持证据：
-- 条件化或边界证据：
-- 挑战或反证：
-- 不可比较项：
-- 当前认识：
+- 主要社区和证据类型：
+- 候选代表论文及预计作用：
+- relation hints：
+- 当前证据层级：
 - 仍需全文确认：
 
-## 6. 证据关系矩阵
+> 本节用于检索与选读，不是 canonical field map。
 
-| 来源论文 | 具体发现/主张 | 证据类型 | 目标论文或路线 | relation kind | 关系成立条件 | 当前证据层级 |
-|---|---|---|---|---|---|---|
+## 6. 引用谱系与版本
 
-relation kind 使用 direct / extends / conditions / challenges / measurement / governance / analogue / incomparable。
-
-## 7. 引用谱系与版本
-
-| 工作 | work_id | DOI | arXiv（带版本） | OpenAlex | 全部已知版本 | 首选引用版本 | 实际分析版本 | 谱系角色 | 依据/疑点 |
+| 工作 | work_id | DOI | arXiv（带版本） | OpenAlex | 全部版本 | 首选引用版本 | 实际分析版本 | 谱系角色 | 依据/疑点 |
 |---|---|---|---|---|---|---|---|---|---|
 
-## 8. 同质簇与未采用候选
+## 7. 同质簇与未采用候选
 
 | 候选 | 处理 | 由谁代表 | 未采用原因 | 证据层级 | 是否仍可能改变判断 |
 |---|---|---|---|---|---|
 
-## 9. 精读反馈与变更集
+## 8. 精读反馈
 
-| reading-return | Q# 覆盖 | 类型纠正 | judgment change | reading value before → after | domain relation before → after | invalidated routes/tasks | 下一动作 |
+| reading-return | Q# 覆盖 | 类型纠正 | judgment change | reading value before → after | relation hint before → after | invalidated tasks | 下一动作 |
 |---|---|---|---|---|---|---|---|
 
-## 10. 优先精读与定向核查
+## 9. 优先精读与定向核查
 
-| paper_key / 请求 | why read | 能改变的 U# | 预计证据 | brief/result | 状态 |
+| paper_key / 请求 | why now | 能改变的 U# | 预计证据 | brief/result | 状态 |
 |---|---|---|---|---|---|
 
-## 11. 分层阅读路径
+## 10. 向 Mapper 提供的候选信息
 
-- 入门：<论文及理由>
-- 路线代表：<论文及理由>
-- 方法或测量：<论文及理由>
-- 反证与边界：<论文及理由>
-- 制度或部署：<论文及理由>
+- 候选 knowledge questions：
+- relation hints：
+- 引用或竞争线索：
+- 已完成的定向外部核查：
+- 仍仅为 metadata/abstract 的判断：
 
-## 12. 证据边界与可能遗漏
+## 11. 覆盖边界
 
-- 查询覆盖与来源限制：
-- 元数据或摘要级判断：
-- 未充分覆盖的社区：
-- 不可比较的分析单位或构念：
-- 相互冲突而暂不能消解的证据：
+- 查询与来源限制：
+- 未覆盖社区：
+- 身份或版本疑点：
+- 可能遗漏的负结果或非英语文献：
+- 当前不能由 Search 判断的内容：
 
-## 13. 更新记录
+## 12. 更新记录
 
-- <日期 / revision>：<哪项证据使类型、价值、关系、查询或谱系发生变化>
+- <日期 / revision>：<哪项证据使查询、身份、阅读价值或 relation hint 发生变化>

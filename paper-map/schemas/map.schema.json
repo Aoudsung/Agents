@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/academic-agents/map.schema.json",
+  "title": "AcademicAgents field map",
+  "type": "object",
+  "required": ["schema_version", "map_id", "revision", "title", "scope", "knowledge_questions", "research_routes", "conclusions", "controversies", "reading_path", "coverage"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "map_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "title": {"type": "string", "minLength": 3},
+    "scope": {
+      "type": "object",
+      "required": ["included", "excluded"],
+      "properties": {
+        "included": {"type": "array", "items": {"type": "string"}},
+        "excluded": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "knowledge_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "parent_id"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "text": {"type": "string", "minLength": 5},
+          "parent_id": {"type": ["string", "null"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "research_routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question_ids", "name", "description", "representative_papers"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "question_ids": {"type": "array", "items": {"type": "string"}},
+          "name": {"type": "string", "minLength": 3},
+          "description": {"type": "string", "minLength": 5},
+          "representative_papers": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "conclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "text", "supporting_relations", "scope", "residual_uncertainty"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["established", "conditional", "contested", "insufficient"]},
+          "text": {"type": "string", "minLength": 10},
+          "supporting_relations": {"type": "array", "items": {"type": "string"}},
+          "scope": {"type": "string", "minLength": 3},
+          "residual_uncertainty": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "controversies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "relation_ids", "current_interpretation"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "question": {"type": "string", "minLength": 5},
+          "relation_ids": {"type": "array", "items": {"type": "string"}},
+          "current_interpretation": {"type": "string", "minLength": 3}
+        },
+        "additionalProperties": true
+      }
+    },
+    "reading_path": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "papers", "reason"],
+        "properties": {
+          "level": {"enum": ["entry", "representative", "method-measurement", "boundary-challenge", "governance-deployment"]},
+          "papers": {"type": "array", "items": {"type": "string"}},
+          "reason": {"type": "string", "minLength": 3}
+        },
+        "additionalProperties": true
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["included_papers", "known_gaps"],
+      "properties": {
+        "included_papers": {"type": "array", "items": {"type": "string"}},
+        "known_gaps": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

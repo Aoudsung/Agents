@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/academic-agents/relation.schema.json",
+  "title": "AcademicAgents canonical relation",
+  "type": "object",
+  "required": ["schema_version", "relation_id", "source", "target", "relation_type", "comparability", "rationale", "evidence_refs", "status", "confidence"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "relation_id": {"type": "string", "pattern": "^REL-[A-Za-z0-9._-]+$"},
+    "source": {"$ref": "#/$defs/endpoint"},
+    "target": {"$ref": "#/$defs/endpoint"},
+    "relation_type": {"enum": ["supports", "extends", "conditions", "challenges", "conflicts", "measurement", "incomparable"]},
+    "comparability": {
+      "type": "object",
+      "required": ["knowledge_question", "construct", "analysis_unit", "context", "evidence_mode", "decision"],
+      "properties": {
+        "knowledge_question": {"enum": ["same", "partial", "different", "unknown"]},
+        "construct": {"enum": ["same", "partial", "different", "unknown"]},
+        "analysis_unit": {"enum": ["same", "partial", "different", "unknown"]},
+        "context": {"enum": ["same", "partial", "different", "unknown"]},
+        "evidence_mode": {"enum": ["same", "complementary", "different", "unknown"]},
+        "decision": {"enum": ["comparable", "partially-comparable", "incomparable"]},
+        "notes": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "rationale": {"type": "string", "minLength": 20},
+    "evidence_refs": {"type": "array", "minItems": 2, "items": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*:[A-Za-z0-9._-]+$"}},
+    "status": {"enum": ["proposed", "accepted", "rejected", "stale"]},
+    "confidence": {"enum": ["high", "medium", "low"]},
+    "created_at": {"type": ["string", "null"]},
+    "review_note": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "endpoint": {
+      "type": "object",
+      "required": ["paper_id", "unit_id", "revision", "content_hash"],
+      "properties": {
+        "paper_id": {"type": "string", "minLength": 1},
+        "unit_id": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 1},
+        "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{8,64}$"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "paper_id": "P51",
+  "revision": 1,
+  "identity": {
+    "paper_key": "p51-stakeholder-participation",
+    "work_id": "W4411550272",
+    "version_id": "2506.09873v1",
+    "title": "Stakeholder Participation for Responsible AI Development",
+    "year": 2025,
+    "venue": "FAccT",
+    "doi": "10.1145/3715275.3732069",
+    "arxiv_id": "2506.09873v1",
+    "openalex_id": "W4411550272",
+    "analyzed_version": "2506.09873v1"
+  },
+  "classification": {
+    "paper_type": ["mixed-methods", "governance"],
+    "study_design": ["document analysis", "survey", "interview"],
+    "evidence_mode": ["descriptive", "qualitative"],
+    "analysis_unit": "responsible-AI guidance and organizational participation practices",
+    "inference_scope": "sampled guidance documents and practitioners"
+  },
+  "research_questions": [
+    {"id": "RQ1", "text": "What stakeholder involvement do responsible-AI guidelines recommend?"}
+  ],
+  "knowledge_units": [
+    {
+      "id": "K1",
+      "kind": "finding",
+      "text": "Reported stakeholder involvement was usually scoped by internal organizational actors.",
+      "statement_source": "author_result",
+      "evidence_locations": ["TXT:368-387"],
+      "scope": "surveyed practitioners",
+      "support_status": "direct"
+    }
+  ],
+  "contribution": {
+    "text": "Characterizes a guidance-practice disconnect in stakeholder involvement for responsible AI.",
+    "reading_role": "governance boundary study"
+  },
+  "reading": {
+    "why_read": "Provides mixed-method evidence about who participates and what authority they receive.",
+    "priority": "high",
+    "best_sections": ["Methods", "Results"],
+    "use_for": ["guidance-practice disconnects"],
+    "do_not_use_for": ["causal effects of participation on deployed-system outcomes"]
+  },
+  "concepts": ["stakeholder involvement", "decision authority", "responsible-AI governance"],
+  "relation_hints": [],
+  "provenance": {
+    "research_record": "research-record.md",
+    "report": "report.md",
+    "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}

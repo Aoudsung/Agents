@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "map_id": "paper-map",
+  "revision": 1,
+  "title": "Paper Map",
+  "scope": {"included": [], "excluded": []},
+  "knowledge_questions": [],
+  "research_routes": [],
+  "conclusions": [],
+  "controversies": [],
+  "reading_path": [],
+  "coverage": {"included_papers": [], "known_gaps": []}
+}
