@@ -1,0 +1,4 @@
+papers/
+cookies*.txt
+.venv/
+__pycache__/
