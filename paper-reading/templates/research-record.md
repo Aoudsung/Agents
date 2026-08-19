@@ -124,7 +124,7 @@
 | 组成方法 | 单独回答什么 | 证据 | 如何与其他方法整合 | 冲突或未闭合之处 |
 |---|---|---|---|---|
 
-## 6. 核心发现、零结果和例外
+## 6. 核心 Finding、零结果和例外
 
 | Finding ID | 具体发现 | 证据类型 | 样本/设置/分析单位 | 原文位置 | 作者解释 | 边界或反例 |
 |---|---|---|---|---|---|---|
@@ -132,8 +132,6 @@
 关键数字记录标签、分母、比较组、方向、显著性或不确定性。质性发现记录材料范围和反例；理论发现记录假设与推导。
 
 ## 7. 论文特异的 Claim-Evidence Cards
-
-复制此区块；数量由论证决定，不固定。
 
 ### <C#>｜<具体主张>
 
@@ -151,22 +149,12 @@
 - related_question：Q#
 - unresolved_part：
 
-> “核心机制有效”“第二类证据支持”“可推广为一般规律”不是合格 Claim。证据位置存在不等于证据支持主张。
+> 通用 Claim 不是合格 Claim。证据位置存在不等于语义支持。
 
-## 8. 贡献、相邻工作与领域关系
+## 8. 贡献与阅读价值
 
 - 本文独有的知识增量：
-- 最接近的工作及具体差异：
 - reading_role：
-- 当前领域作用：
-
-| 来源论文 | 目标论文/路线 | relation kind | 具体关系 | 成立条件 | 证据层级 |
-|---|---|---|---|---|---|
-
-relation kind：direct / extends / conditions / challenges / measurement / governance / analogue / incomparable。
-
-## 9. 阅读价值与引用用途
-
 - why_read：
 - audience：
 - reading_priority 与理由：
@@ -174,6 +162,13 @@ relation kind：direct / extends / conditions / challenges / measurement / gover
 - use_for：
 - do_not_use_for：
 - 可跳过的部分及条件：
+
+## 9. Proposed relation hints
+
+| 当前 unit | 目标论文/unit | proposed type | 为什么值得比较 | 可比性风险 | 当前证据层级 | status |
+|---|---|---|---|---|---|---|
+
+proposed type：supports / extends / conditions / challenges / conflicts / measurement / incomparable。status 固定为 proposed；最终裁定由 Map Agent 完成。
 
 ## 10. 证据审计
 
@@ -188,7 +183,7 @@ relation kind：direct / extends / conditions / challenges / measurement / gover
 
 ## 11. 可选：科学 Gap
 
-没有符合条件的 Gap 时写“未生成：当前最需要的是理解/测量/外部核查，而非构造研究缺口”。
+没有符合条件的 Gap 时写“未生成：当前最需要的是理解、测量或外部核查，而非构造研究缺口”。
 
 ### <G#>｜<标题>
 
@@ -203,7 +198,7 @@ relation kind：direct / extends / conditions / challenges / measurement / gover
 
 ## 12. 可选：候选研究程序
 
-没有必要时删除本节。候选进入研究决策前必须完成 Search 最近工作核查。
+候选进入研究决策前必须完成 Search 最近工作核查；不得写入 paper-card 的 contribution 或 knowledge units。
 
 ### <O#>｜<标题>
 
@@ -218,17 +213,7 @@ relation kind：direct / extends / conditions / challenges / measurement / gover
 - novelty_check：
 - feasibility_boundary：
 
-## 13. 按需独立批评
-
-- 是否触发及原因：
-- critical-review.md：
-- 硬性错误及处理：
-- 咨询性异议及处理：
-- accepted / rejected / deferred 与理由：
-
-## 14. 对 reading-brief 的逐项回答
-
-复制每个 Q#，题目必须一致。
+## 13. 对 reading-brief 的逐项回答
 
 ### Q1｜<问题原文>
 
@@ -239,8 +224,21 @@ relation kind：direct / extends / conditions / challenges / measurement / gover
 - remaining_uncertainty：
 - judgment_change：
 - reading_value_change：
-- domain_relation_change：
+- relation_hint_change：
 - next_search_action：
+
+## 14. paper-card 导出清单
+
+- card path：paper-card.json
+- schema version：1
+- card revision：
+- content hash：
+- 导出的 research questions：
+- 导出的 knowledge units：
+- 导出的 contribution：
+- 导出的 relation hints：
+- 未导出内容及原因：<例如 Reader 后续研究建议>
+- 与本账本一致性检查：pass / fail
 
 ## 15. 返回 Search 的变更集
 
@@ -250,14 +248,10 @@ relation kind：direct / extends / conditions / challenges / measurement / gover
 - reading_value_before：
 - reading_value_after：
 - reading_role：
-- domain_relation_before：
-- domain_relation_after：
-- relation_kind：
+- relation_hint_before：
+- relation_hint_after：
+- proposed_relation_type：
 - new_terms：
 - citations_to_expand：
 - invalidated_routes_or_tasks：
 - Search research-record 应修改什么：
-
-## 16. 更新记录
-
-- <日期 / revision>：<依据、修改和原因>

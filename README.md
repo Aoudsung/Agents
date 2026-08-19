@@ -1,70 +1,94 @@
-# AcademicAgents — 双 Agent 论文知识工作流
+# AcademicAgents — 三 Agent 论文知识工作流
 
-本项目只保留两个顶层 Agent，但不再把“填满同一套分析字段”当成完成：
+本项目将论文研究流程拆成三个证据边界清晰的 Agent：
 
-- Search Agent 负责外部文献空间、论文身份、研究路线、证据关系、阅读优先级和定向核查；
-- Analysis Agent 负责单篇全文、论文自己的论证结构、主张—证据关系、阅读价值，以及证据可比时的跨论文知识合成。
+- **Search Agent**：维护外部检索前沿，负责候选召回、身份版本、引用谱系、阅读优先级和 provisional relation hints；
+- **Analysis Agent**：负责单篇全文、作者论证、Finding/Claim-Evidence、阅读价值，以及结构化 `paper-card.json`；
+- **Map Agent**：负责多篇论文之间的可比性、canonical relations、领域问题树、研究路线、争议和阅读路径。
 
-成功标准是读者能够回答三组问题：一篇论文为什么值得读、能够怎样引用；它与相邻论文究竟支持、扩展、条件化、挑战还是不可比较；多篇论文共同建立了什么、哪些认识仍有争议。
+成功标准不是文件齐全或图中边很多，而是：
 
-## 三种产品
+1. 单篇报告能说明论文做了什么、发现了什么、为什么值得读；
+2. 每条跨论文关系都连接明确知识单元，并说明可比性和适用条件；
+3. `knowledge/MAP.md` 能形成自包含、可追溯的领域认识。
 
-三种产品面向不同读者，不能互相替代：
+## 权威状态
 
-1. research-record.md 是可追溯的证据账本，保存类型路由、分析单位、原文位置、具体 Claim 和未决问题；
-2. report.md 是面向研究者的阅读报告，按论文自身的问题与论证组织；
-3. papers/SYNTHESIS.md 是领域知识合成，组织问题树、研究传统、证据关系、稳定认识、争议、不可比较项和阅读路径。
+```text
+Search  → searches/**/research-record.md     # 检索前沿与候选假设
+Reader  → papers/**/research-record.md       # 单篇全文证据账本
+Reader  → papers/**/paper-card.json          # Mapper 的单篇机器合同
+Mapper  → knowledge/relations.jsonl          # canonical relation state
+Mapper  → knowledge/map.json                 # 问题、路线、结论与阅读路径
+Mapper  → knowledge/MAP.md                    # 面向研究者的领域地图
+Mapper  → knowledge-vault/                    # Obsidian 投影
+```
 
-Gap、研究机会和独立批评都是按需产物。论文没有交互系统、训练过程或因果识别时，不得为了模板完整而制造对应执行链；not-applicable 是合法结论。
+`report.md` 面向人类阅读，不是 Mapper 的主要机器输入。Searcher 和 Reader 可以提出关系候选，但只有 Mapper 能写入 accepted relation。
 
-## Agent 闭环
+## 最小闭环
 
-Search 先提出论文类型、阅读价值和领域关系假设，并在 reading-brief.md 中用稳定 Q# 写明需要全文核实的问题。Analysis 先做类型路由，再维护证据账本、生成阅读报告，并在 reading-return.md 中逐字保留 Q#，返回 answered、partial、undetermined 或 not-applicable，以及阅读价值和领域关系的具体变化。Search 只更新被新证据改变的部分。
-
-完整契约见 [ARCHITECTURE.md](ARCHITECTURE.md)。
+```text
+用户问题
+  ↓
+Search 建立检索前沿并选择值得精读的论文
+  ↓
+Reader 恢复单篇论证，生成 report.md + paper-card.json
+  ↓
+Mapper 对齐知识问题和具体 knowledge units
+  ↓
+可比性判断 → 关系裁定 → map.json
+  ↓
+MAP.md / INDEX.md / Obsidian Vault
+  ↓
+缺少外部或全文证据时，向 Searcher/Reader 发最小请求
+```
 
 ## 目录
 
 ```text
-AcademicAgents/
+Agents/
 ├── Search-Agent.md
 ├── Analysis-Agent.md
+├── Map-Agent.md
 ├── ARCHITECTURE.md
 ├── paper-search/
-│   ├── SKILL.md
-│   ├── README.md
-│   ├── scripts/openalex_search.py
-│   └── templates/
-│       ├── research-record.md
-│       ├── search-evidence.md
-│       ├── reading-brief.md
-│       └── report.md
 ├── paper-reading/
+├── paper-map/
 │   ├── SKILL.md
-│   ├── README.md
-│   ├── scripts/
-│   └── templates/
-│       ├── research-record.md
-│       ├── critical-review.md
-│       ├── reading-return.md
-│       ├── report.md
-│       └── synthesis.md
-└── scripts/
-    ├── qa_hai_artifacts.py
-    ├── qa_hai_artifacts_v2.py
-    └── build_hai_analysis_artifacts.py
+│   ├── schemas/
+│   ├── templates/
+│   ├── tests/
+│   └── map.py
+├── knowledge/
+│   ├── cards/
+│   ├── relations.jsonl
+│   └── map.json
+└── knowledge-vault/
 ```
 
-Search-Agent.md 与 paper-search/SKILL.md、Analysis-Agent.md 与 paper-reading/SKILL.md 分别保持完全一致，便于单文件审阅和实际技能加载。
+根目录 Agent 定义与对应 Skill 文件保持一致：
+
+```text
+Search-Agent.md   == paper-search/SKILL.md
+Analysis-Agent.md == paper-reading/SKILL.md
+Map-Agent.md      == paper-map/SKILL.md
+```
+
+## Paper Map 命令
+
+不需要图数据库、向量数据库或 Obsidian 插件：
+
+```bash
+python3 paper-map/map.py init --root .
+python3 paper-map/map.py validate --root .
+python3 paper-map/map.py candidates --root . --paper P51 --limit 8
+python3 paper-map/map.py render --root .
+python3 -m unittest discover -s paper-map/tests -v
+```
+
+`candidates` 只生成局部候选邻域；它不会自动接受关系。`render` 从 canonical JSON/JSONL 确定性生成 Markdown 与 Obsidian 视图，并保留 `knowledge-vault/90-Human-Notes/`。
 
 ## 自动化边界
 
-脚本可以校验身份、文件、Q# 对齐、原文位置、索引字段、重复句和合成结构；不能从摘要卡批量发明全文解读、固定 C1–C3、G1/O1 或领域结论。
-
-旧的 build_hai_analysis_artifacts.py 仅保留为问题溯源，入口已经失败关闭。它生成的旧 01–04 文件属于迁移输入，不是现行必需产物。运行以下只读门禁检查当前产物：
-
-```bash
-python3 scripts/qa_hai_artifacts.py
-```
-
-门禁失败意味着产物尚未满足新的阅读与合成标准，不能用“文件齐全”覆盖失败。
+脚本可以处理路径、结构、revision、候选召回和渲染；不能仅凭摘要、共同关键词、引用边或 embedding 自动生成科学关系。任何 `conflicts` 关系都必须通过可比性门；任何领域结论都必须引用 accepted relation IDs。

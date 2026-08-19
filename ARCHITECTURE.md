@@ -1,129 +1,126 @@
-# 双 Agent 架构与知识产品契约
+# 三 Agent 架构与知识产品契约
 
-## 1. 系统目标
+## 1. 设计原则
 
-系统只保留两个认知主体：
+Agent 边界按证据边界划分，而不是按连续推理步骤拆分：
 
-- **Search Agent** 对外部文献空间、论文身份、研究路线、证据谱系和阅读优先级负责；
-- **Analysis Agent** 对单篇全文、论文自身的论证结构、主张—证据关系、阅读价值和跨论文知识合成负责。
+- Searcher 面对外部论文空间；
+- Reader 面对单篇全文；
+- Mapper 面对多篇已经验证的 paper cards。
 
-系统的成功条件不是“字段齐全”或“每篇都生成相同文件”，而是：
+这避免 Searcher、Reader 和 Mapper 分别生成一套相互竞争的文献地图。
 
-1. 读者能够准确理解一篇论文做了什么、发现了什么、为什么值得读；
-2. 每项判断都能回到与其语义匹配的证据；
-3. 多篇论文能够形成自包含、可解释、有证据关系的领域认识。
+## 2. 所有权矩阵
 
-## 2. 三种知识产品必须分离
+| 对象 | Searcher | Reader | Mapper |
+|---|---|---|---|
+| 候选论文与版本 | authoritative | verify analyzed version | consume |
+| 引用谱系 | authoritative | return corrections | consume |
+| 单篇论证与 Finding/Claim | no | authoritative | consume |
+| 阅读价值 | hypothesis | authoritative | organize path |
+| relation hint | propose | propose | adjudicate |
+| canonical relation | no | no | authoritative |
+| 领域问题树与路线 | candidate frontier | no | authoritative |
+| 领域结论、争议、阅读路径 | no | no | authoritative |
+| Obsidian 投影 | no | no | authoritative renderer |
 
-### 2.1 证据账本
+## 3. 三类知识产品
 
-`research-record.md` 面向 Agent 和审计，保存论文身份、研究类型、分析单位、原文位置、具体 Claim、支持程度、统计或质性证据、版本信息和未决问题。它可以结构化，但不得为了填满字段制造 Claim、Gap 或 Opportunity。
+### 3.1 检索前沿
 
-### 2.2 阅读报告
+`searches/**/research-record.md` 保存候选路线、论文身份、证据层级、精读优先级和 provisional relation hints。它回答“可能有什么”和“下一步读什么”，不回答“领域最终建立了什么”。
 
-`report.md` 面向研究者，按论文自身的问题和论证组织，优先回答：为什么读、作者回答什么、怎样回答、发现什么、贡献在哪里、与相邻工作有什么差异、哪些结论可信、如何阅读和引用。证据账本的全部字段不自动进入报告。
+### 3.2 单篇知识
 
-### 2.3 领域合成
+`papers/**/research-record.md` 是全文证据账本；`report.md` 是面向研究者的阅读报告；`paper-card.json` 是 Mapper 的结构化输入。Reader 不维护跨论文 synthesis。
 
-`papers/SYNTHESIS.md` 面向研究方向，先建立领域边界、问题树、研究传统、代表论文、证据关系、已建立认识、争议和不可比较项，再给出分层阅读路径。研究机会只能作为知识合成后的可选末节，不能替代领域认识。
+### 3.3 跨论文知识
 
-## 3. 最小闭环
+`knowledge/relations.jsonl` 保存 canonical relations；`knowledge/map.json` 保存问题、路线、结论、争议和阅读路径；`MAP.md` 和 Obsidian Vault 是确定性投影。
 
-```text
-用户问题或种子论文
-        ↓
-Search 建立可修订的文献地图与阅读价值假设
-        ↓
-Search 为一项会改变判断的问题生成 reading-brief.md
-        ↓
-Analysis 先识别论文证据类型，再按适用逻辑精读
-        ↓
-Analysis 维护证据账本并生成面向读者的 report.md
-        ↓
-Analysis 逐项生成 reading-return.md
-        ↓
-Search 更新论文作用、阅读价值、领域关系、查询和谱系
-        ↓
-需要外部核查？── 是：Search 定向核查后返回 Analysis
-        │
-        否
-        ↓
-Analysis 在证据可比时形成跨论文知识合成
-```
-
-## 4. 论文类型路由是强制前置步骤
-
-Analysis 在寻找机制、执行链或 Gap 前，必须记录：
-
-- 研究类型与证据模式；
-- 分析单位；
-- 数据或材料来源；
-- 作者实际允许的推断范围；
-- 适用的阅读与审计逻辑。
-
-研究类型可以是多标签。至少覆盖：方法/模型、交互系统/设计、受控实验、调查/访谈/民族志/现场研究、综述/分类/指南分析、测量/量表验证、理论/概念、政策/治理/审计、混合方法。
-
-只有论文实际包含 AI 交互系统、训练过程或推理过程时，才写相应执行链。`不适用` 是合法结果；不得把调查、治理、综述或量表论文改写成用户输入—AI 输出—用户采纳的交互实验。
-
-## 5. Search ↔ Analysis 合同
-
-`reading-brief.md` 是问题合同。每个问题必须有稳定 Q#、原检索判断、为什么重要、期望证据和优先级；问题应由论文类型与当前未知量产生，不预设机制已经存在。
-
-`reading-return.md` 是证据变化合同。它必须逐字保留每个 Q# 和题目，并返回：
-
-- `answered / partial / undetermined / not-applicable`；
-- 结论及其证据位置；
-- 仍不能确认的内容；
-- 对原判断、阅读价值和领域关系的改变；
-- 需要 Search 执行的最小后续动作。
-
-问题没有回答时必须显式可见，不能用通用总结替代。
-
-## 6. 动作选择与渐进深度
-
-每次检索、全文深挖、外部核查或研究机会构造前回答：
-
-1. 当前哪项判断最重要；
-2. 什么证据会改变它；
-3. 哪个最小动作最可能获得该证据。
-
-证据深度按依赖关系递进：
+## 4. 数据流
 
 ```text
-元数据 → 摘要 → 全文 → 必要图表/公式/附录/工件 → 定向外部证据 → 独立批评
+Search relation hint
+      ↓
+reading-brief Q#
+      ↓
+Reader full-text verification
+      ↓
+paper-card.json
+      ↓
+Mapper candidate neighborhood
+      ↓
+comparability gate
+      ↓
+accepted / rejected / incomparable / stale relation
+      ↓
+map.json conclusions and reading path
 ```
 
-不能指出目标判断时停止扩展。Gap、判别实验、研究程序和独立批评均按需触发，不是每篇论文的固定步骤。
+`report.md` 可用于人工理解，但不能替代 paper card。Reader 的研究建议不得进入论文贡献或 knowledge unit。
 
-## 7. 完成门
+## 5. Paper Card 合同
 
-以下任一情况存在时，不得宣称单篇报告完成：
+Card 必须包含：
 
-- 论文类型、分析单位或证据模式未确定；
-- 使用了与论文类型不相容的分析链；
-- Claim 只是“核心机制有效”“第二类证据支持”“可推广为一般规律”等通用槽位；
-- 关键数字、统计结论或质性主题没有原文位置；
-- reading-brief 的 Q# 未逐项回答或标记状态；
-- 报告没有说明为什么值得读、可以支持什么和不能支持什么；
-- 隐去标题和 DOI 后，正文不能唯一辨认这篇论文；
-- 实质性句子可无修改复用于大量异质论文。
+- 稳定 paper ID、work/version identity 和 revision；
+- paper type、evidence mode、analysis unit、inference scope；
+- research questions；
+- knowledge units 及原文位置与 scope；
+- contribution 与 reading role；
+- why_read、use_for、do_not_use_for；
+- concepts；
+- proposed relation hints；
+- provenance content hash。
 
-以下任一情况存在时，不得宣称跨论文合成完成：
+Card 可以没有 knowledge unit 或 relation hint；不得为满足 Schema 制造通用 Claim。
 
-- 只列 P 编号而不说明论文名称、具体贡献和证据类型；
-- 把设计变量、心理构念、代理指标和最终结果放在同一比较轴；
-- 没有区分支持、扩展、条件化、冲突和不可比较；
-- 没有解释论文为何属于同一知识问题；
-- 在领域认识形成前直接跳到系统设计或研究议程。
+## 6. Canonical Relation 合同
 
-## 8. 自动化边界
+每条 relation 连接两个明确 knowledge units，并记录：
 
-脚本可以负责身份校验、路径、Q# 对齐、引用完整性、重复句检测和索引汇总；不能仅凭一张字段卡自动生成全文解读、Claim、Gap、Opportunity 或静态领域结论。
+- relation type；
+- 五维可比性；
+- rationale；
+- evidence refs；
+- source/target card revision 与 hash；
+- accepted / rejected / proposed / stale 状态；
+- confidence。
 
-任何批量生成器若不读取论文类型、具体论证和逐项证据，应失败关闭，而不是产出格式完整的报告。结构 QA 必须与语义 QA 同时通过。
+`conflicts` 仅允许在 comparability decision 为 `comparable` 时成立。`incomparable` 必须说明不兼容维度。
 
-## 9. 状态与归档
+## 7. Map Conclusion 合同
 
-Search 的 `research-record.md` 保存文献地图状态；Analysis 的 `research-record.md` 保存单篇证据账本。旧 `01–04` 分角色文件只能作为迁移输入，不再是必需产物。
+每项领域结论必须：
 
-论文优先直接归档到 `papers/<topic>/`；方向不确定时放 `papers/inbox/`。`papers/INDEX.md` 同时承担文件导航和阅读导航，至少记录研究类型、阅读价值、领域作用、报告和 reading-return 路径。
+- 自包含；
+- 标记 established / conditional / contested / insufficient；
+- 引用 accepted relation IDs；
+- 写明 scope；
+- 写明反例或剩余不确定性。
+
+Mapper 先形成领域认识，再按用户需要提出研究议程。
+
+## 8. 增量与失效
+
+Card revision 或 hash 变化时，仅检查引用该 card/unit 的 relations。端点文本、scope、证据位置、support status 或分析版本发生变化时，将 relation 标记 stale。stale relation 不得继续支撑领域结论。
+
+## 9. Obsidian
+
+Obsidian 是本地浏览层，不是 canonical store。Mapper 生成平面 YAML、普通 Markdown links 和多个局部视图，不生成一张不可读的全局 hairball。渲染不得覆盖 `knowledge-vault/90-Human-Notes/`。
+
+## 10. 轻量实现
+
+首版只使用：
+
+```text
+JSON paper cards
+JSONL relations
+JSON map state
+Markdown / Obsidian
+Python 3 standard library
+Git
+```
+
+不依赖 Neo4j、向量数据库、工作流引擎或社区插件。候选召回和关系裁定分离：脚本召回候选，Map Agent 完成语义判断。

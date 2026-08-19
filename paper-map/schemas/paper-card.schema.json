@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/academic-agents/paper-card.schema.json",
+  "title": "AcademicAgents paper card",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "paper_id",
+    "revision",
+    "identity",
+    "classification",
+    "research_questions",
+    "knowledge_units",
+    "contribution",
+    "reading",
+    "concepts",
+    "relation_hints",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "paper_id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$"},
+    "revision": {"type": "integer", "minimum": 1},
+    "identity": {
+      "type": "object",
+      "required": ["paper_key", "work_id", "version_id", "title", "year", "venue", "doi", "arxiv_id", "openalex_id", "analyzed_version"],
+      "properties": {
+        "paper_key": {"type": "string", "minLength": 1},
+        "work_id": {"type": ["string", "null"]},
+        "version_id": {"type": ["string", "null"]},
+        "title": {"type": "string", "minLength": 5},
+        "year": {"type": ["integer", "null"], "minimum": 1800, "maximum": 2200},
+        "venue": {"type": ["string", "null"]},
+        "doi": {"type": ["string", "null"]},
+        "arxiv_id": {"type": ["string", "null"]},
+        "openalex_id": {"type": ["string", "null"]},
+        "analyzed_version": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "classification": {
+      "type": "object",
+      "required": ["paper_type", "study_design", "evidence_mode", "analysis_unit", "inference_scope"],
+      "properties": {
+        "paper_type": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 2}, "uniqueItems": true},
+        "study_design": {"type": "array", "items": {"type": "string", "minLength": 2}, "uniqueItems": true},
+        "evidence_mode": {"type": "array", "items": {"type": "string", "minLength": 2}, "uniqueItems": true},
+        "analysis_unit": {"type": "string", "minLength": 3},
+        "inference_scope": {"type": "string", "minLength": 3}
+      },
+      "additionalProperties": true
+    },
+    "research_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "text": {"type": "string", "minLength": 5}
+        },
+        "additionalProperties": false
+      }
+    },
+    "knowledge_units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "text", "statement_source", "evidence_locations", "scope", "support_status"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {
+            "enum": ["finding", "claim", "proposition", "definition", "method", "measurement", "interpretation", "limitation"]
+          },
+          "text": {"type": "string", "minLength": 10},
+          "statement_source": {"enum": ["author_result", "author_claim", "author_interpretation", "reader_inference"]},
+          "evidence_locations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 2}},
+          "scope": {"type": "string", "minLength": 3},
+          "support_status": {"enum": ["direct", "conditional", "indirect", "undetermined", "contradicted"]},
+          "related_questions": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "required": ["text", "reading_role"],
+      "properties": {
+        "text": {"type": "string", "minLength": 10},
+        "reading_role": {"type": "string", "minLength": 2}
+      },
+      "additionalProperties": true
+    },
+    "reading": {
+      "type": "object",
+      "required": ["why_read", "priority", "best_sections", "use_for", "do_not_use_for"],
+      "properties": {
+        "why_read": {"type": "string", "minLength": 10},
+        "priority": {"enum": ["high", "medium", "low"]},
+        "best_sections": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "use_for": {"type": "array", "items": {"type": "string", "minLength": 3}},
+        "do_not_use_for": {"type": "array", "items": {"type": "string", "minLength": 3}}
+      },
+      "additionalProperties": true
+    },
+    "concepts": {"type": "array", "items": {"type": "string", "minLength": 2}, "uniqueItems": true},
+    "relation_hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_unit", "target_paper", "target_unit", "proposed_type", "reason", "comparability_risks", "status"],
+        "properties": {
+          "source_unit": {"type": "string", "minLength": 1},
+          "target_paper": {"type": "string", "minLength": 1},
+          "target_unit": {"type": ["string", "null"]},
+          "proposed_type": {"enum": ["supports", "extends", "conditions", "challenges", "conflicts", "measurement", "incomparable"]},
+          "reason": {"type": "string", "minLength": 5},
+          "comparability_risks": {"type": "array", "items": {"type": "string", "minLength": 2}},
+          "status": {"const": "proposed"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["research_record", "report", "content_hash"],
+      "properties": {
+        "research_record": {"type": "string", "minLength": 1},
+        "report": {"type": "string", "minLength": 1},
+        "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{8,64}$"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
